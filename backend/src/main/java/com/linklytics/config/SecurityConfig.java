@@ -55,10 +55,13 @@ public class SecurityConfig {
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
                     response.getWriter().write("{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Authentication required to access this resource.\"}");
                 })
             )
             .authorizeHttpRequests(auth -> auth
+                // Error page dispatch
+                .requestMatchers("/error").permitAll()
                 // Short link redirects (must be publicly accessible)
                 .requestMatchers(HttpMethod.GET, "/r/**", "/r").permitAll()
                 .requestMatchers(HttpMethod.POST, "/r/**/verify").permitAll()

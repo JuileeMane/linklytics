@@ -30,6 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return path.startsWith("/r/") || path.equals("/r")
                 || path.startsWith("/api/auth/")
                 || path.equals("/api/health")
+                || path.equals("/error")
                 || path.startsWith("/v3/api-docs")
                 || path.startsWith("/swagger-ui")
                 || request.getMethod().equalsIgnoreCase("OPTIONS");
