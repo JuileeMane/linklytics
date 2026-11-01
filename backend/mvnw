@@ -1,0 +1,25 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# LinkLytics Maven Wrapper script for Unix/Linux/macOS
+# ----------------------------------------------------------------------------
+PRG="$0"
+while [ -h "$PRG" ] ; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+SAVED="`pwd`"
+cd "`dirname \"$PRG\"`" >/dev/null
+APPDIR="`pwd -P`"
+cd "$SAVED" >/dev/null
+
+if command -v mvn >/dev/null 2>&1; then
+    exec mvn "$@"
+else
+    echo "Maven not found in PATH"
+    exit 1
+fi
