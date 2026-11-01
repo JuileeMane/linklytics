@@ -304,20 +304,26 @@ public class LinkService {
 
     public String getEffectiveBaseUrl() {
         String renderExternal = System.getenv("RENDER_EXTERNAL_URL");
+        String renderHost = System.getenv("RENDER_EXTERNAL_HOSTNAME");
         if (renderExternal != null && !renderExternal.isBlank()) {
-            if (baseUrl == null || baseUrl.isBlank()
-                    || baseUrl.equals("https://linklytics-backend.onrender.com")
-                    || baseUrl.contains("localhost")) {
-                return renderExternal.replaceAll("/+$", "");
+            renderExternal = renderExternal.replaceAll("/+$", "");
+        } else if (renderHost != null && !renderHost.isBlank()) {
+            renderExternal = "https://" + renderHost.replaceAll("/+$", "");
+        }
+
+        String cleanBase = baseUrl != null ? baseUrl.trim().replaceAll("/+$", "") : "";
+        if (cleanBase.isEmpty() || cleanBase.equals("https://linklytics-backend.onrender.com")
+                || cleanBase.equals("http://linklytics-backend.onrender.com")) {
+            if (renderExternal != null && !renderExternal.isBlank()) {
+                return renderExternal;
             }
+            if (frontendUrl != null && !frontendUrl.isBlank() && !frontendUrl.contains("*")) {
+                return frontendUrl.trim().replaceAll("/+$", "");
+            }
+            return "https://linklytics-azure.vercel.app";
         }
-        if (baseUrl != null && !baseUrl.isBlank() && !baseUrl.equals("https://linklytics-backend.onrender.com")) {
-            return baseUrl.replaceAll("/+$", "");
-        }
-        if (renderExternal != null && !renderExternal.isBlank()) {
-            return renderExternal.replaceAll("/+$", "");
-        }
-        return baseUrl != null && !baseUrl.isBlank() ? baseUrl.replaceAll("/+$", "") : "http://localhost:8080";
+
+        return cleanBase;
     }
 
     public LinkResponse mapToResponse(Link link) {
