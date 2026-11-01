@@ -43,7 +43,10 @@ public class RedirectController {
             response.sendRedirect(destination);
         } catch (UnauthorizedException e) {
             // Link is password protected - redirect to frontend unlock page
-            response.sendRedirect(frontendUrl + "/p/" + shortCode);
+            String target = (frontendUrl != null && !frontendUrl.contains("*") && !frontendUrl.isBlank())
+                    ? frontendUrl.replaceAll("/+$", "")
+                    : "https://linklytics-azure.vercel.app";
+            response.sendRedirect(target + "/p/" + shortCode);
         }
     }
 

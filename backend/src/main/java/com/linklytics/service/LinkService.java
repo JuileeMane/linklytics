@@ -302,13 +302,31 @@ public class LinkService {
         }
     }
 
+    public String getEffectiveBaseUrl() {
+        String renderExternal = System.getenv("RENDER_EXTERNAL_URL");
+        if (renderExternal != null && !renderExternal.isBlank()) {
+            if (baseUrl == null || baseUrl.isBlank()
+                    || baseUrl.equals("https://linklytics-backend.onrender.com")
+                    || baseUrl.contains("localhost")) {
+                return renderExternal.replaceAll("/+$", "");
+            }
+        }
+        if (baseUrl != null && !baseUrl.isBlank() && !baseUrl.equals("https://linklytics-backend.onrender.com")) {
+            return baseUrl.replaceAll("/+$", "");
+        }
+        if (renderExternal != null && !renderExternal.isBlank()) {
+            return renderExternal.replaceAll("/+$", "");
+        }
+        return baseUrl != null && !baseUrl.isBlank() ? baseUrl.replaceAll("/+$", "") : "http://localhost:8080";
+    }
+
     public LinkResponse mapToResponse(Link link) {
         if (link == null) return null;
         return LinkResponse.builder()
                 .id(link.getId())
                 .originalUrl(link.getOriginalUrl())
                 .shortCode(link.getShortCode())
-                .shortUrl(baseUrl + "/r/" + link.getShortCode())
+                .shortUrl(getEffectiveBaseUrl() + "/r/" + link.getShortCode())
                 .customAlias(link.getCustomAlias())
                 .title(link.getTitle())
                 .passwordProtected(link.isPasswordProtected())

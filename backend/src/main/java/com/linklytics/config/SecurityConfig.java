@@ -51,9 +51,18 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(exceptions -> exceptions
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Authentication required to access this resource.\"}");
+                })
+            )
             .authorizeHttpRequests(auth -> auth
                 // Short link redirects (must be publicly accessible)
-                .requestMatchers("/r/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/r/**", "/r").permitAll()
+                .requestMatchers(HttpMethod.POST, "/r/**/verify").permitAll()
+                .requestMatchers("/r/**", "/r").permitAll()
                 // Authentication endpoints
                 .requestMatchers("/api/auth/**").permitAll()
                 // Health check
