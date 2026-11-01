@@ -44,6 +44,9 @@ public class LinkService {
     @Value("${app.base-url:http://localhost:8080}")
     private String baseUrl;
 
+    @Value("${app.frontend-url:https://linklytics-azure.vercel.app}")
+    private String frontendUrl;
+
     @Transactional
     public LinkResponse createLink(User user, CreateLinkRequest request) {
         String normalizedUrl = UrlValidatorUtil.normalizeUrl(request.getOriginalUrl());
