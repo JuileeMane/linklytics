@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/r/:shortCode*",
+      "destination": "https://linklytics-backend-c30y.onrender.com/r/:shortCode*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
