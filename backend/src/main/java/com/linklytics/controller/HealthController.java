@@ -28,7 +28,7 @@ public class HealthController {
         Map<String, Object> health = new HashMap<>();
         health.put("status", "UP");
         health.put("service", "LinkLytics Backend");
-        health.put("version", "1.0.4");
+        health.put("version", "1.0.5");
         health.put("timestamp", LocalDateTime.now());
 
         try {

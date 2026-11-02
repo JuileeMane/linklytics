@@ -64,8 +64,8 @@ public class SecurityConfig {
                 .requestMatchers("/error").permitAll()
                 // Short link redirects (must be publicly accessible)
                 .requestMatchers("/r/**", "/r").permitAll()
-                // Authentication endpoints
-                .requestMatchers("/api/auth/**").permitAll()
+                // Public authentication endpoints
+                .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
                 // Health check
                 .requestMatchers("/api/health/**", "/api/health").permitAll()
                 // OpenAPI / Swagger UI

@@ -48,6 +48,9 @@ public class AuthController {
     @GetMapping("/me")
     @Operation(summary = "Retrieve currently authenticated user's profile and summary stats")
     public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            throw new com.linklytics.exception.UnauthorizedException("Authentication required");
+        }
         return ResponseEntity.ok(authService.getCurrentUser(userDetails.getUsername()));
     }
 
@@ -56,6 +59,9 @@ public class AuthController {
     public ResponseEntity<UserResponse> updateProfile(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody UpdateProfileRequest request) {
+        if (userDetails == null) {
+            throw new com.linklytics.exception.UnauthorizedException("Authentication required");
+        }
         return ResponseEntity.ok(authService.updateProfile(userDetails.getUsername(), request));
     }
 
@@ -64,6 +70,9 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> changePassword(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody ChangePasswordRequest request) {
+        if (userDetails == null) {
+            throw new com.linklytics.exception.UnauthorizedException("Authentication required");
+        }
         authService.changePassword(userDetails.getUsername(), request);
         return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
     }
