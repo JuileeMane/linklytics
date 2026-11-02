@@ -5,6 +5,10 @@
       "destination": "https://linklytics-backend-c30y.onrender.com/r/:shortCode*"
     },
     {
+      "source": "/api/:path*",
+      "destination": "https://linklytics-backend-c30y.onrender.com/api/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

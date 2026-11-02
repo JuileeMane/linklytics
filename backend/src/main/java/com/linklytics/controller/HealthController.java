@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,7 +28,7 @@ public class HealthController {
         Map<String, Object> health = new HashMap<>();
         health.put("status", "UP");
         health.put("service", "LinkLytics Backend");
-        health.put("version", "1.0.2");
+        health.put("version", "1.0.3");
         health.put("timestamp", LocalDateTime.now());
 
         try {
@@ -39,5 +40,26 @@ public class HealthController {
         }
 
         return ResponseEntity.ok(health);
+    }
+
+    @GetMapping("/diagnostics")
+    @Operation(summary = "Database diagnostics inspection")
+    public ResponseEntity<Map<String, Object>> diagnostics() {
+        Map<String, Object> diag = new HashMap<>();
+        try {
+            List<Map<String, Object>> tables = jdbcTemplate.queryForList(
+                "SELECT table_name FROM information_schema.tables WHERE table_schema='public'"
+            );
+            diag.put("tables", tables);
+        } catch (Exception e) {
+            diag.put("tablesError", e.getMessage());
+        }
+        try {
+            Integer userCount = jdbcTemplate.queryForObject("SELECT count(*) FROM users", Integer.class);
+            diag.put("userCount", userCount);
+        } catch (Exception e) {
+            diag.put("userCountError", e.getMessage());
+        }
+        return ResponseEntity.ok(diag);
     }
 }
