@@ -36,7 +36,7 @@ export const LoginPage = () => {
       await login(email, password);
       navigate(from, { replace: true });
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid email or password. Please try again.');
+      setError(err.response?.data?.message || err.message || 'Invalid email or password. Please try again.');
     } finally {
       setLoading(false);
     }

@@ -63,13 +63,11 @@ public class SecurityConfig {
                 // Error page dispatch
                 .requestMatchers("/error").permitAll()
                 // Short link redirects (must be publicly accessible)
-                .requestMatchers(HttpMethod.GET, "/r/**", "/r").permitAll()
-                .requestMatchers(HttpMethod.POST, "/r/**/verify").permitAll()
                 .requestMatchers("/r/**", "/r").permitAll()
                 // Authentication endpoints
                 .requestMatchers("/api/auth/**").permitAll()
                 // Health check
-                .requestMatchers("/api/health").permitAll()
+                .requestMatchers("/api/health/**", "/api/health").permitAll()
                 // OpenAPI / Swagger UI
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 // CORS pre-flight
